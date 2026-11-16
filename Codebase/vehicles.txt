@@ -1,0 +1,37 @@
+{
+    "vehicles": [
+        {
+            "vehicle_id": "V1",
+            "vehicle_type": "Car",
+            "model": "Swift",
+            "rate": 1500.0,
+            "available": false
+        },
+        {
+            "vehicle_id": "V2",
+            "vehicle_type": "Bike",
+            "model": "Splendor",
+            "rate": 500.0,
+            "available": false
+        },
+        {
+            "vehicle_id": "V3",
+            "vehicle_type": "car",
+            "model": "suv",
+            "rate": 60.0,
+            "available": true
+        }
+    ],
+    "rentals": {
+        "V1": {
+            "customer": "Aman",
+            "days": 7,
+            "bill": 9450.0
+        },
+        "V2": {
+            "customer": "Neha",
+            "days": 3,
+            "bill": 1500.0
+        }
+    }
+}
