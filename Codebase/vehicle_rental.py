@@ -1,21 +1,21 @@
 
-import json
-import os
+import json      # json is a built-in Python module. It is used to store retrieve and store data. Use JSON to save data in vehicles.txt.
+import os        #os is a built-in Python module. It allows Python to interact with the operating system. Use to check whether data file exist.
 
 # -------------------------------
 # VEHICLE CLASS
 # -------------------------------
 
-class Vehicle:
+class Vehicle:          # Vehicle is the class that defines the information every vehicle should congtain.
 
-    def __init__(self, vehicle_id, vehicle_type, model, rate, available=True):
+    def __init__(self, vehicle_id, vehicle_type, model, rate, available=True):    # These statements assign values to the object's attributes.
         self.vehicle_id = vehicle_id
         self.vehicle_type = vehicle_type
         self.model = model
         self.rate = rate
         self.available = available
 
-    def display(self):
+    def display(self):     # Displays the details of a vehicle.
         status = "Available" if self.available else "Rented"
 
         print(
@@ -23,38 +23,38 @@ class Vehicle:
             f"{self.model} | Rs. {self.rate:g}/day | {status}"
         )
 
-    def to_dict(self):
+    def to_dict(self):  # Converts a Vehicle object into a dictionary. 
         return {
             "vehicle_id": self.vehicle_id,
             "vehicle_type": self.vehicle_type,
             "model": self.model,
             "rate": self.rate,
             "available": self.available
-        }
-
+        }         # JSON cannot directly serialize your custom Vehicle objects.
 # -------------------------------
-# RENTAL SYSTEM CLASS
+# RENTAL SYSTEM CLASS    
 # -------------------------------
 
-class RentalSystem:
+class RentalSystem:      # This class controls the complete rental management system.
 
-    def __init__(self):
-        self.vehicles = []
-        self.rentals = {}
+    def __init__(self):  # Constructor of the RentalSystem class. It runs automatically when an object is created.
+        self.vehicles = []  # Creates an empty list to store vehicle objects.
+        self.rentals = {}   # Creates an empty dictionary to store rental details.
 
-        self.filename = "vehicles.txt"
+        self.filename = "vehicles.txt"  # Stores the name of the file where project data is saved.
 
-        self.load_data()
+        self.load_data()  # Calls the load_data() method to retrieve previously saved information when the system starts.
 
     # ---------------------------
     # SAVE DATA INTO FILE
     # ---------------------------
-
-    def save_data(self):
+ # Purpose: Saves all vehicle and rental information into vehicles.txt
+    
+    def save_data(self):  # Defines a method named save_data().
 
         data = {
-            "vehicles": [v.to_dict() for v in self.vehicles],
-            "rentals": self.rentals
+            "vehicles": [v.to_dict() for v in self.vehicles],  # This is a list comprehension.
+            "rentals": self.rentals  # Stores the rental dictionary inside the main data dictionary.
         }
 
         with open(self.filename, "w") as file:
@@ -63,17 +63,19 @@ class RentalSystem:
     # ---------------------------
     # LOAD DATA FROM FILE
     # ---------------------------
+    
+# Purpose: Loads previously saved vehicle and rental information when the program starts.
+    
+    def load_data(self):  
 
-    def load_data(self):
-
-        if not os.path.exists(self.filename):
+        if not os.path.exists(self.filename):         # This checks whether vehicles.txt exist.
             return
 
-        try:
+        try:  # It allows the program to handle certain errors without immediately crashing.
             with open(self.filename, "r") as file:
                 data = json.load(file)
 
-            for item in data.get("vehicles", []):
+            for item in data.get("vehicles", []):  # It retrieves the value associated with the "vehicles" key.
                 vehicle = Vehicle(
                     item["vehicle_id"],
                     item["vehicle_type"],
@@ -82,18 +84,20 @@ class RentalSystem:
                     item["available"]
                 )
 
-                self.vehicles.append(vehicle)
+                self.vehicles.append(vehicle)  # Adds newly created vehicle object to the vehicles list.
 
-            self.rentals = data.get("rentals", {})
+            self.rentals = data.get("rentals", {})   
 
-        except (json.JSONDecodeError, KeyError, TypeError):
-            print("Warning: Could not load saved data.")
+        except (json.JSONDecodeError, KeyError, TypeError):  # Handles this type of error.
+            print("Warning: Could not load saved data.")  # Dispaly error when one of these errors occurs.
 
     # ---------------------------
     # GENERATE VEHICLE ID
     # ---------------------------
-
-    def generate_id(self):
+    
+# Purpose: Automatically generates a unique vehicle ID.
+    
+    def generate_id(self): # generate vehicle IDs.
 
         numbers = []
 
@@ -105,22 +109,23 @@ class RentalSystem:
 
         next_number = max(numbers, default=0) + 1
 
-        return "V" + str(next_number)
+        return "V" + str(next_number) # Converts the number into a string and adds "V" before it.
 
     # ---------------------------
     # ADD VEHICLE
     # ---------------------------
 
+# Purpose: Adds a new vehicle to the rental system.
     def add_vehicle(self):
 
-        vehicle_type = input("Type: ").strip()
+        vehicle_type = input("Type: ").strip()  # strip removes unnecessary spaces. 
         model = input("Model: ").strip()
 
         if not vehicle_type or not model:
             print("Vehicle type and model cannot be empty.")
             return
 
-        try:
+        try:  # Starts an exception-handling block.
             rate = float(input("Rate per day: "))
 
             if rate <= 0:
@@ -131,7 +136,7 @@ class RentalSystem:
             print("Please enter a valid rate.")
             return
 
-        vehicle_id = self.generate_id()
+        vehicle_id = self.generate_id()  # generate_id() is func to generate a new vehicle id.
 
         vehicle = Vehicle(
             vehicle_id,
@@ -158,7 +163,7 @@ class RentalSystem:
 
         for vehicle in self.vehicles:
 
-            if vehicle.vehicle_id == vehicle_id:
+            if vehicle.vehicle_id == vehicle_id: # compares the ID of current and ID of enter by user.
                 return vehicle
 
         return None
@@ -187,7 +192,7 @@ class RentalSystem:
             print("Please enter a valid number of days.")
             return
 
-        vehicle = self.find_vehicle(vehicle_id)
+        vehicle = self.find_vehicle(vehicle_id) # method to search for the requested vehicle.
 
         if vehicle is None:
             print("Vehicle ID not found.")
@@ -254,13 +259,15 @@ class RentalSystem:
         # Update vehicle status
         vehicle.available = True
 
-        self.save_data()
+        self.save_data() # Saves the updated rental information and vehicle availability.
 
         print(f"{vehicle_id} returned. Status: Available")
 
     # ---------------------------
     # VIEW AVAILABLE VEHICLES
     # ---------------------------
+
+ # Purpose: Displays all vehicles stored in the system.
 
     def view_vehicles(self):
 
@@ -277,7 +284,8 @@ class RentalSystem:
     # MAIN MENU
     # ---------------------------
 
-    def menu(self):
+ # Purpose: Provides the main interface through which users operate the system.
+    def menu(self): 
 
         while True:
 
@@ -316,8 +324,9 @@ class RentalSystem:
 # MAIN PROGRAM
 # -------------------------------
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # Main guard 
 
-    system = RentalSystem()
+    system = RentalSystem()  # Creates an object named system of the RentalSystem class.
 
-    system.menu()
+    system.menu()  # This displays the main menu and allows the user to operate the project.
+
