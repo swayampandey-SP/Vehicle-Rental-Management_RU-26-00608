@@ -286,7 +286,6 @@ class RentalSystem:      # This class controls the complete rental management sy
 
  # Purpose: Provides the main interface through which users operate the system.
     def menu(self): 
-
         while True:
 
             print("\n================================")
@@ -318,8 +317,6 @@ class RentalSystem:      # This class controls the complete rental management sy
 
             else:
                 print("Invalid choice. Please try again.")
-
-
 # -------------------------------
 # MAIN PROGRAM
 # -------------------------------
@@ -329,4 +326,3 @@ if __name__ == "__main__":  # Main guard
     system = RentalSystem()  # Creates an object named system of the RentalSystem class.
 
     system.menu()  # This displays the main menu and allows the user to operate the project.
-
